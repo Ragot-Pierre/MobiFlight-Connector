@@ -269,6 +269,7 @@
     <Compile Include="MobiFlight\Joysticks\JoystickDefinition.cs" />
     <Compile Include="MobiFlight\Joysticks\JoystickInput.cs" />
     <Compile Include="MobiFlight\Joysticks\JoystickOutput.cs" />
+    <Compile Include="MobiFlight\Joysticks\Octavi\Octavi.cs" />
     <Compile Include="MobiFlight\MaximumDeviceNumberReachedMobiFlightException.cs" />
     <Compile Include="MobiFlight\MidiBoard\MidiBoard.cs" />
     <Compile Include="MobiFlight\MidiBoard\MidiBoardDefinition.cs" />
@@ -290,6 +291,10 @@
     <Compile Include="MobiFlight\Modifier\Comparison.cs" />
     <Compile Include="MobiFlight\Modifier\Blink.cs" />
     <Compile Include="MobiFlight\Modifier\ModifierList.cs" />
+    <Compile Include="MobiFlight\Joysticks\Octavi\OctaviHandler.cs" />
+    <Compile Include="MobiFlight\Joysticks\Octavi\OctaviReport.cs" />
+    <Compile Include="MobiFlight\Modifier\Padding.cs" />
+    <Compile Include="MobiFlight\Modifier\Substring.cs" />
     <Compile Include="MobiFlight\OutputConfig\FsuipcOffset.cs" />
     <Compile Include="MobiFlight\OutputConfig\LedModule.cs" />
     <Compile Include="MobiFlight\OutputConfig\ShiftRegister.cs" />
@@ -433,6 +438,12 @@
     <Compile Include="UI\Panels\Config\PreconditionPanel.Designer.cs">
       <DependentUpon>PreconditionPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Panels\Config\TestValuePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Config\TestValuePanel.Designer.cs">
+      <DependentUpon>TestValuePanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Panels\Config\VariablePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -511,6 +522,60 @@
     <Compile Include="UI\Panels\LogPanel.Designer.cs">
       <DependentUpon>LogPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Panels\Modifier\BlinkModifierPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\BlinkModifierPanel.Designer.cs">
+      <DependentUpon>BlinkModifierPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\BlinkModifier\BlinkSequencePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\BlinkModifier\BlinkSequencePanel.Designer.cs">
+      <DependentUpon>BlinkSequencePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\ComparisonModifierPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\ComparisonModifierPanel.Designer.cs">
+      <DependentUpon>ComparisonModifierPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\InterpolationModifierPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\InterpolationModifierPanel.Designer.cs">
+      <DependentUpon>InterpolationModifierPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\InterpolationModifier\InterpolationMappingPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\InterpolationModifier\InterpolationMappingPanel.Designer.cs">
+      <DependentUpon>InterpolationMappingPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\ModifierControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\ModifierControl.Designer.cs">
+      <DependentUpon>ModifierControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\PaddingModifierPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\PaddingModifierPanel.Designer.cs">
+      <DependentUpon>PaddingModifierPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\SubstringModifierPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\SubstringModifierPanel.Designer.cs">
+      <DependentUpon>SubstringModifierPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\TransformModifierPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\Modifier\TransformModifierPanel.Designer.cs">
+      <DependentUpon>TransformModifierPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Panels\OutputConfigPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -522,6 +587,12 @@
     </Compile>
     <Compile Include="UI\Panels\OutputWizard\DisplayPanel.Designer.cs">
       <DependentUpon>DisplayPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Panels\OutputWizard\ModifierPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Panels\OutputWizard\ModifierPanel.Designer.cs">
+      <DependentUpon>ModifierPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Panels\Output\PinSelectPanel.cs">
       <SubType>UserControl</SubType>
@@ -947,6 +1018,24 @@
     <None Include="firmware\reset.raspberry_pico_flash_nuke.uf2">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Joysticks\octavi.joystick.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MidiBoards\BoardEditorConfigs\intechf44\Mobiflight-SessionProfile.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MidiBoards\BoardEditorConfigs\mpd218\mpd218mobi.mpd218">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MidiBoards\BoardEditorConfigs\nanokontrol2\nanoKontrol2Mobi.nktrl2_data">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MidiBoards\BoardEditorConfigs\xtouchmini\LayerA.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MidiBoards\BoardEditorConfigs\xtouchmini\LayerB.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="MidiBoards\intech_ef44.midiboard.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1013,6 +1102,7 @@
     <None Include="Resources\arcaze-changed.png" />
     <Content Include="mobiflight.ico" />
     <Content Include="Resources\button.png" />
+    <None Include="Resources\disabled.png" />
     <Content Include="Resources\discord_icon.png" />
     <Content Include="Resources\encoder.png" />
     <Content Include="Resources\led.png" />
@@ -1125,6 +1215,9 @@
     <EmbeddedResource Include="UI\Panels\Config\SimConnectPanel.resx">
       <DependentUpon>SimConnectPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Config\TestValuePanel.resx">
+      <DependentUpon>TestValuePanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Config\TransformOptionsGroup.de.resx">
       <DependentUpon>TransformOptionsGroup.cs</DependentUpon>
     </EmbeddedResource>
@@ -1195,6 +1288,33 @@
     <EmbeddedResource Include="UI\Panels\LogPanel.resx">
       <DependentUpon>LogPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\BlinkModifierPanel.resx">
+      <DependentUpon>BlinkModifierPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\BlinkModifier\BlinkSequencePanel.resx">
+      <DependentUpon>BlinkSequencePanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\ComparisonModifierPanel.resx">
+      <DependentUpon>ComparisonModifierPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\InterpolationModifierPanel.resx">
+      <DependentUpon>InterpolationModifierPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\InterpolationModifier\InterpolationMappingPanel.resx">
+      <DependentUpon>InterpolationMappingPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\ModifierControl.resx">
+      <DependentUpon>ModifierControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\PaddingModifierPanel.resx">
+      <DependentUpon>PaddingModifierPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\SubstringModifierPanel.resx">
+      <DependentUpon>SubstringModifierPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\Modifier\TransformModifierPanel.resx">
+      <DependentUpon>TransformModifierPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\OutputConfigPanel.de.resx">
       <DependentUpon>OutputConfigPanel.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1213,6 +1333,9 @@
     <EmbeddedResource Include="UI\Panels\OutputWizard\DisplayPanel.resx">
       <DependentUpon>DisplayPanel.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Panels\OutputWizard\ModifierPanel.resx">
+      <DependentUpon>ModifierPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Panels\Output\DisplayLedDisplayPanel.de.resx">
       <DependentUpon>DisplayLedDisplayPanel.cs</DependentUpon>

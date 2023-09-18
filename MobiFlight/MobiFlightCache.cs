@@ -507,6 +507,7 @@ namespace MobiFlight
                 if (!Modules.ContainsKey(serial)) return;
 
                 MobiFlightModule module = GetModuleBySerial(serial);
+                if (module == null) return;
 
                 if (name != null && name.Contains("|")) {
                     var pins = name.Split('|');
@@ -550,7 +551,7 @@ namespace MobiFlight
         /// <param name="digits"></param>
         /// <param name="decimalPoints"></param>
         /// <param name="value"></param>
-        public void setDisplay(string serial, string address, byte connector, List<string> digits, List<string> decimalPoints, string value)
+        public void setDisplay(string serial, string address, byte connector, List<string> digits, List<string> decimalPoints, string value, bool reverse)
         {
             if (serial == null)
             {
@@ -578,7 +579,7 @@ namespace MobiFlight
                 }
 
                 MobiFlightModule module = Modules[serial];
-                module.SetDisplay(address, connector - 1, ledDigit.getDecimalPoints(), (byte)ledDigit.getMask(), value);
+                module.SetDisplay(address, connector - 1, ledDigit.getDecimalPoints(), (byte)ledDigit.getMask(), value, reverse);
             }
             catch (Exception e)
             {
@@ -829,8 +830,8 @@ namespace MobiFlight
         public MobiFlightModule GetModuleBySerial(string serial)
         {
             if (Modules.ContainsKey(serial)) return Modules[serial];
-            
-            throw new IndexOutOfRangeException();
+
+            return null;
         }
 
         internal MobiFlightModule GetModule(MobiFlightModuleInfo moduleInfo)

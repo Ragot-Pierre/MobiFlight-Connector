@@ -15,6 +15,7 @@ using MobiFlight.InputConfig;
 using MobiFlight.xplane;
 using System.Globalization;
 using Newtonsoft.Json.Linq;
+using FSUIPC;
 
 namespace MobiFlight
 {
@@ -91,6 +92,8 @@ namespace MobiFlight
         private bool _autoConnectTimerRunning = false;
 
         FlightSimType LastDetectedSim = FlightSimType.NONE;
+
+        string ConfigItemInTestMode = null;
 
         public ExecutionManager(DataGridView dataGridViewConfig, DataGridView inputsDataGridView, IntPtr handle)
         {
@@ -461,6 +464,13 @@ namespace MobiFlight
                     continue;
                 }
 
+                // Don't execute a config that we are currently manually testing.
+                var currentGuid = (row.DataBoundItem as DataRowView).Row["guid"].ToString();
+                if (ConfigItemInTestMode!=null && ConfigItemInTestMode == currentGuid)
+                {
+                    continue;
+                } 
+
                 // If not connected to FSUIPC show an error message
                 if (cfg.SourceType == SourceType.FSUIPC && !fsuipcCache.IsConnected())
                 {
@@ -771,14 +781,7 @@ namespace MobiFlight
                                 );
                         }
 
-                        if (cfg.LedModule.DisplayLedReverseDigits)
-                        {
-                            val = new string(val.ToCharArray().Reverse().ToArray());
-                            for (int i = 0; i != decimalPoints.Count; i++)
-                            {
-                                decimalPoints[i] = (cfg.LedModule.DisplayLedDigits.Count - int.Parse(decimalPoints[i]) - 1).ToString();
-                            };
-                        }
+                        var reverse = cfg.LedModule.DisplayLedReverseDigits;
 
                         mobiFlightCache.setDisplay(
                             serial,
@@ -786,7 +789,8 @@ namespace MobiFlight
                             cfg.LedModule.DisplayLedConnector,
                             cfg.LedModule.DisplayLedDigits,
                             decimalPoints,
-                            val);
+                            val,
+                            reverse);
 
                         break;
 
@@ -1092,7 +1096,7 @@ namespace MobiFlight
                 {
                     if (LastDetectedSim != FlightSimType.NONE) {
                         OnSimUnavailable?.Invoke(LastDetectedSim, null);
-                        LastDetectedSim = FlightSim.FlightSimType;
+                        LastDetectedSim = FlightSimType.NONE;
                     }
                     Log.Instance.log("No Sim running.", LogSeverity.Debug);
                 }
@@ -1134,7 +1138,7 @@ namespace MobiFlight
                 lastRow.Selected = false;
                 try
                 {
-                    ExecuteTestOff(cfg);
+                    ExecuteTestOff(cfg, true);
                 }
                 catch (IndexOutOfRangeException ex)
                 {
@@ -1187,7 +1191,8 @@ namespace MobiFlight
 
                 try
                 {
-                    ExecuteTestOn(cfg);
+                    var currentGuid = (row.DataBoundItem as DataRowView).Row["guid"].ToString();
+                    ExecuteTestOn(cfg, currentGuid, null);
                 }
                 catch (IndexOutOfRangeException ex)
                 {
@@ -1207,9 +1212,13 @@ namespace MobiFlight
         }
 
 
-        public void ExecuteTestOff(OutputConfigItem cfg)
+        public void ExecuteTestOff(OutputConfigItem cfg, bool ResetConfigItemInTest)
         {
+            if (ResetConfigItemInTest)
+                ConfigItemInTestMode = null;
+
             OutputConfigItem offCfg = (OutputConfigItem)cfg.Clone();
+            
             if (offCfg.DisplayType == null) return;
 
             switch (offCfg.DisplayType)
@@ -1240,26 +1249,29 @@ namespace MobiFlight
             }
         }
 
-        public void ExecuteTestOn(OutputConfigItem cfg)
+        public void ExecuteTestOn(OutputConfigItem cfg, string configGuid, ConnectorValue value = null)
         {
+            ConfigItemInTestMode = configGuid;
+
             if (cfg.DisplayType == null) return;
 
             switch (cfg.DisplayType)
             {
                 case MobiFlightStepper.TYPE:
-                    ExecuteDisplay(cfg.Stepper.TestValue.ToString(), cfg);
+                    ExecuteDisplay(value.ToString() != "" ? value.ToString() : cfg.Stepper.TestValue.ToString(), cfg);
                     break;
 
                 case MobiFlightServo.TYPE:
-                    ExecuteDisplay(cfg.Servo.Max, cfg);
+                    ExecuteDisplay(value.ToString() != "" ? value.ToString() : cfg.Servo.Max, cfg);
                     break;
 
+                case ArcazeLedDigit.TYPE:
                 case OutputConfig.LcdDisplay.Type:
-                    ExecuteDisplay("1234567890", cfg);
+                    ExecuteDisplay(value.ToString() != "" ? value.ToString() : "1234567890", cfg);
                     break;
                 
                 case MobiFlightShiftRegister.TYPE:
-                    ExecuteDisplay("1", cfg);
+                    ExecuteDisplay(value.ToString() != "" ? value.ToString() : "1", cfg);
                     break;
 
                 case "InputAction":
@@ -1267,7 +1279,7 @@ namespace MobiFlight
                     break;
 
                 default:
-                    ExecuteDisplay(cfg.DisplayType == ArcazeLedDigit.TYPE ? "12345678" : "255", cfg);
+                    ExecuteDisplay(value.ToString() != "" ? value.ToString() : "255", cfg);
                     break;
             }
         }
@@ -1523,6 +1535,17 @@ namespace MobiFlight
         public SimConnectCache GetSimConnectCache()
         {
             return simConnectCache;
+        }
+
+
+        public Fsuipc2Cache GetFsuipcConnectCache()
+        {
+            return fsuipcCache;
+        }
+
+        public XplaneCache GetXlpaneConnectCache()
+        {
+            return xplaneCache;
         }
 
 
