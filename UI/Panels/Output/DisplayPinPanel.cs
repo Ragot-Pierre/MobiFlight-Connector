@@ -180,28 +180,10 @@ namespace MobiFlight.UI.Panels
             String pin = (sender as ComboBox).SelectedItem.ToString();
             foreach (var item in Module.GetConnectedDevices(pin))
             {
-<<<<<<< HEAD
-                String pin = (sender as ComboBox).SelectedItem.ToString();
-                foreach (var item in Module.GetConnectedDevices(pin))
-                {
-                    pwmPinPanel.Enabled = pwmPinPanel.Visible = Module.getPwmPins()
-                                                .Find(x => x.Pin == (uint)(item as MobiFlightOutput).Pin) != null;
-                    return;
-                }
-||||||| 2574dc07
-                String pin = (sender as ComboBox).SelectedItem.ToString();
-                foreach (var item in Module.GetConnectedDevices(pin))
-                {
-                    pwmPinPanel.Enabled = pwmPinPanel.Visible = Module.getPwmPins()
-                                                .Find(x => x.Pin == (byte)(item as MobiFlightOutput).Pin) != null;
-                    return;
-                }
-=======
                 pwmPinPanel.Enabled = pwmPinPanel.Visible 
                                     = Module.getPwmPins()
                                             .Find(x => x.Pin == (byte)(item as MobiFlightOutput).Pin) != null;
                 return;
->>>>>>> upstream/main
             }
         }
 
